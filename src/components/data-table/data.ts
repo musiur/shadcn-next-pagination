@@ -1,9 +1,9 @@
 import { TGetPaymentDataResponse, TPayment } from "./types";
 
 
-export const GetPaymentData = async ({ page, limit }: { page: string, limit: string }): TGetPaymentDataResponse => {
+export const GetPaymentData = async ({ page, limit, searchText }: { page?: string, limit?: string, searchText?: string }): TGetPaymentDataResponse => {
   const response = await fetch(
-    `${process.env.TRANSACTION_ENDPOINT}?page=${page}&limit=${limit}`,
+    `${process.env.TRANSACTION_ENDPOINT}?page=${page}&limit=${limit}&search=${searchText}`,
     {
       headers: {
         "Content-Type": "application/json",
@@ -12,7 +12,7 @@ export const GetPaymentData = async ({ page, limit }: { page: string, limit: str
     }
   );
   const result = await response.json();
-  console.log(result?.meta)
+  console.log(result)
   const formatedResult: TPayment[] = result?.data?.map((item: {id: string, amount: number, status: string}) => {
     const { id, amount, status } = item;
     return {
