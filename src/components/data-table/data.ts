@@ -1,12 +1,13 @@
 import { TGetPaymentDataResponse, TPayment } from "./types";
 
 
-export const GetPaymentData = async ({ page, limit, searchText }: { page?: string, limit?: string, searchText?: string }): TGetPaymentDataResponse => {
-  let url = `${process.env.TRANSACTION_ENDPOINT}?page=${page}&limit=${limit}`;
-
-  if (searchText?.length) {
-    url += `&search=${searchText}`;
-  }
+export const GetPaymentData = async (payload: Record<string, string>): TGetPaymentDataResponse => {
+  let url = `${process.env.TRANSACTION_ENDPOINT}`;
+  Object.entries(payload).forEach(([key, value], index) => {
+    if (value?.length) {
+      url += `${index === 0 ? "?" : "&"}${key}=${value}`;
+    }
+  });
 
   const response = await fetch(
     url,
@@ -18,7 +19,7 @@ export const GetPaymentData = async ({ page, limit, searchText }: { page?: strin
     }
   );
   const result = await response.json();
-  console.log(result)
+
   const formatedResult: TPayment[] = result?.data?.map((item: { id: string, amount: number, status: string }) => {
     const { id, amount, status } = item;
     return {

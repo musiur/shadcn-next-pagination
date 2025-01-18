@@ -11,9 +11,13 @@ const TableSearch = () => {
   const queries = useSearchParams();
   const [disabled, setDisabled] = useState(false);
   const page = queries.get("page") || "1";
-    const limit = queries.get("limit") || "10";
+  const limit = queries.get("limit") || "10";
+  const searchText = queries.get("search") || "";
 
-  const debounce = (func: (...args: any[]) => void, delay: number): (...args: any[]) => void => {
+  const debounce = (
+    func: (...args: any[]) => void,
+    delay: number
+  ): ((...args: any[]) => void) => {
     let timeoutId: NodeJS.Timeout;
     return (...args: any[]) => {
       if (timeoutId) {
@@ -44,6 +48,8 @@ const TableSearch = () => {
       onChange={handleChange}
       disabled={disabled}
       readOnly={disabled}
+      className="w-[240px]"
+      defaultValue={searchText}
     />
   );
 };
